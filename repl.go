@@ -7,7 +7,11 @@ import (
 	"strings"
 )
 
-func startRepl() {
+type config struct {
+	commands map[string]cliCommand
+}
+
+func startRepl(cfg *config) {
 	reader := bufio.NewScanner(os.Stdin)
 
 	for {
@@ -19,10 +23,11 @@ func startRepl() {
 		if len(words) == 0 {
 			continue
 		}
+		commandName := words[0]
 
-		command, exists := getCommands()[words[0]]
+		command, exists := cfg.commands[commandName]
 		if exists {
-			err := command.callback()
+			err := command.callback(cfg)
 			if err != nil {
 				fmt.Println(err)
 			}
