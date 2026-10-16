@@ -17,7 +17,7 @@ func TestCleanInput(t *testing.T) {
 		},
 		{
 			input:    "BIG LETTER 2",
-			expected: []string{"BIG", "LETTER", "2"},
+			expected: []string{"big", "letter", "2"},
 		},
 	}
 

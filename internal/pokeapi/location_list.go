@@ -8,9 +8,22 @@ import (
 
 func (c *Client) ListLocations(pageURL *string) (Locations, error) {
 
+	var loc Locations //; return struct
+
 	url := baseURL + "/location-area"
 	if pageURL != nil {
 		url = *pageURL
+	}
+
+	// check if in cache
+	if val, ok := c.cache.Get(url); ok {
+		// unmashal into struct
+		//fmt.Println("cache hit:", url)
+		err := json.Unmarshal(val, &loc)
+		if err != nil {
+			return Locations{}, err
+		}
+		return loc, nil
 	}
 
 	// make request object
@@ -34,8 +47,10 @@ func (c *Client) ListLocations(pageURL *string) (Locations, error) {
 		return Locations{}, err
 	}
 
+	// put new data into cache
+	c.cache.Add(url, data)
+
 	// unmashal into struct
-	var loc Locations
 	err = json.Unmarshal(data, &loc)
 	if err != nil {
 		return Locations{}, err
