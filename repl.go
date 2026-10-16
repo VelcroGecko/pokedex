@@ -5,17 +5,22 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/velcrogecko/pokedex/internal/pokeapi"
 )
 
 type config struct {
-	commands map[string]cliCommand
+	commands         map[string]cliCommand
+	pokeapiClient    pokeapi.Client
+	nextLocationsURL *string
+	prevLocationsURL *string
 }
 
 func startRepl(cfg *config) {
 	reader := bufio.NewScanner(os.Stdin)
 
 	for {
-		fmt.Print("Poxedex > ")
+		fmt.Print("Pokedex > ")
 		reader.Scan()
 
 		words := cleanInput(reader.Text())
